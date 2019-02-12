@@ -7,6 +7,10 @@ this project uses date-based 'snapshot' version identifiers.
 
 ## [Unreleased]
 
+### Changed
+
+- Speed up variants and reduce their \tracingall output
+
 ## [2019-02-03]
 
 ### Added
