@@ -1939,6 +1939,22 @@
   }
 %    \end{macrocode}
 %
+% System layer messages
+%    \begin{macrocode}
+\__kernel_msg_new:nnnn { sys } { backend-set }
+  { Backend~configuration~already~set. }
+  {
+    Run-time~backend~selection~may~only~be~carried~out~once~during~a~run.~
+    This~second~attempt~to~set~them~will~be~ignored.
+  }
+\__kernel_msg_new:nnnn { sys } { wrong-backend }
+  { Backend~request~inconsistent~with~engine:~using~'#2'~backend. }
+  {
+    You~have~requested~backend~'#1',~but~this~is~not~suitable~for~use~with~the~
+    active~engine.~LaTeX3~will~use~the~'#2'~backend~instead.
+  }
+%    \end{macrocode}
+%
 % \subsection{Expandable errors}
 %
 % \begin{macro}{\@@_expandable_error:n}

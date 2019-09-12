@@ -130,6 +130,12 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{variable}{\g__kernel_deprecation_undo_recent_bool}
+%    \begin{macrocode}
+\bool_new:N \g__kernel_deprecation_undo_recent_bool
+%    \end{macrocode}
+% \end{variable}
+%
 % \begin{macro}{\@@_not_yet_deprecated:nTF, \@@_minus_six_months:w}
 %   Receives a deprecation \meta{date} and runs the \texttt{true}
 %   (\texttt{false}) branch if the \pkg{expl3} date is earlier (later)
@@ -153,7 +159,7 @@
           } < {#1}
           {
             \bool_set_true:N \l_@@_grace_period_bool
-            \bool_if:NTF \g__kernel_sys_undo_recent_deprecations_bool
+            \bool_if:NTF \g__kernel_deprecation_undo_recent_bool
           }
           { \use_ii:nn }
       }
@@ -248,7 +254,7 @@
           {
             \cs_if_eq_p:NN #3 \cs_gset_protected:Npn &&
             \__kernel_if_debug:TF
-              { \c_true_bool } { \g__kernel_sys_undo_recent_deprecations_bool }
+              { \c_true_bool } { \g__kernel_deprecation_undo_recent_bool }
           }
           { \@@_warn_once:nnNnn {#1} {#2} #4 {#5} {#6} }
           { \@@_patch_aux:Nn #3 { #4 #5 {#6} } }

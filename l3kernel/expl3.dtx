@@ -1270,8 +1270,38 @@
 %    \end{macrocode}
 % \end{variable}
 %
+%   Pretty standard setting creation.
 %    \begin{macrocode}
-\exp_args:NV \sys_configuration_gset:n \l_@@_options_clist
+\keys_define:nn { sys }
+  {
+    backend .choices:nn =
+      { dvipdfmx , dvips , dvisvgm , pdfmode , xdvipdfmx }
+      { \sys_load_backend:n {#1} } ,
+    check-declarations .code:n =
+      {
+        \sys_load_debug:
+        \debug_on:n { check-declarations }
+      } ,
+    driver .meta:n = { backend = #1 } ,
+    enable-debug .code:n =
+      \sys_load_debug: ,
+    log-functions .code:n =
+      {
+        \sys_load_debug:
+        \debug_on:n { log-functions }
+      } ,
+    undo-recent-deprecations .code:n =
+      {
+        \sys_load_deprecation:
+        \bool_gset_true:N \g__kernel_deprecation_undo_recent_bool
+      }
+  }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\keys_set:nV { sys } \l_@@_options_clist
+\str_if_exist:NF \c_sys_backend_str
+  { \sys_load_backend:n { } }
 %    \end{macrocode}
 %
 % \begin{macro}{\@pushfilename, \@popfilename}
@@ -1463,6 +1493,11 @@
   }
 %    \end{macrocode}
 % \end{macro}
+%
+% Load the standard back-end.
+%    \begin{macrocode}
+\sys_load_backend:n { }
+%    \end{macrocode}
 %
 %  For the generic loader, a few final steps to take. Turn of \cs{expl3}
 %  syntax and tidy up the small number of temporary changes.
