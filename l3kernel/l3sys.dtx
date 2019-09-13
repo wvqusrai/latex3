@@ -429,9 +429,10 @@
 % \end{macro}
 % \end{macro}
 %
-% \begin{variable}{\g_@@_debug_bool}
+% \begin{variable}{\g_@@_debug_bool, \g_@@_deprecation_bool}
 %    \begin{macrocode}
 \bool_new:N \g_@@_debug_bool
+\bool_new:N \g_@@_deprecation_bool
 %    \end{macrocode}
 % \end{variable}
 %
@@ -443,10 +444,13 @@
     \bool_if:NF \g_@@_debug_bool
       { \__kernel_sys_configuration_load:n { l3debug } }
     \bool_gset_true:N \g_@@_debug_bool
-    \__kernel_sys_configuration_load:n { l3deprecation }
   }
 \cs_new_protected:Npn \sys_load_deprecation:
-  { \__kernel_sys_configuration_load:n { l3deprecation } }
+  {
+    \bool_if:NF \g_@@_deprecation_bool
+      { \__kernel_sys_configuration_load:n { l3deprecation } }
+    \bool_gset_true:N \g_@@_deprecation_bool
+  }
 %    \end{macrocode}
 % \end{macro}
 %
