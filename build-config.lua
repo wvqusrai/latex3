@@ -29,6 +29,7 @@ unpacksuppfiles = unpacksuppfiles or
     "*.fd",
     "*.ini",
     "*.ltx",
+    "CaseFolding.txt",
     "docstrip.tex",
     "fontenc.sty",
     "hyphen.cfg",
@@ -37,6 +38,7 @@ unpacksuppfiles = unpacksuppfiles or
     "lualatexquotejobname.lua",
     "luatexconfig.tex",
     "pdftexconfig.tex",
+    "SpecialCasing.txt",
     "texsys.cfg",
     "UnicodeData.txt",
     "UShyphen.tex"
