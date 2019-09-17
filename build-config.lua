@@ -10,16 +10,37 @@ checksuppfiles  = checksuppfiles  or
   {
     "CaseFolding.txt",
     "fontenc.sty",
+    "fontloader-*.lua",
+    "ltluatex.lua",
+    "lualibs*.lua",
+    "luaotfload*.lua",
+    "luaotfload-blacklist.cnf",
     "minimal.cls",
     "ot1enc.def",
     "regression-test.cfg",
     "regression-test.tex",
     "SpecialCasing.txt",
-    "UnicodeData.txt",
+    "UnicodeData.txt"
   }
 tagfiles = tagfiles or {"*.dtx", "README.md", "CHANGELOG.md"}
-unpacksuppfiles = unpacksuppfiles or {"docstrip.tex"}
-
+unpacksuppfiles = unpacksuppfiles or
+  {
+    "*.def",
+    "*.fd",
+    "*.ini",
+    "*.ltx",
+    "docstrip.tex",
+    "fontenc.sty",
+    "hyphen.cfg",
+    "load-unicode-data.tex",
+    "load-unicode-xetex-classes.tex",
+    "lualatexquotejobname.lua",
+    "luatexconfig.tex",
+    "pdftexconfig.tex",
+    "texsys.cfg",
+    "UnicodeData.txt",
+    "UShyphen.tex"
+  }
 
 packtdszip  = true
 
@@ -74,3 +95,40 @@ function update_tag(file,content,tagname,tagdate)
   end
   return content
 end
+
+-- Need to build format files
+local function fmt()
+  local function mkfmt(engine)
+    -- Standard (u)pTeX engines don't have e-TeX
+    local cmd = engine
+    if string.match(engine,"uptex") then
+      cmd = "euptex"
+    elseif string.match(engine,"ptex") then
+      cmd = "eptex"
+    end
+    -- Use .ini files if available
+    local src = "latex.ltx"
+    local ini = string.gsub(engine,"tex","") .. "latex.ini"
+    if fileexists(supportdir .. "/" .. ini) then
+      src = ini
+    end
+    local errorlevel = os.execute(
+      os_setenv .. " TEXINPUTS=" .. unpackdir .. os_pathsep .. localdir
+      .. os_concat .. cmd .. " -etex -ini -output-directory=" .. unpackdir
+      .. " " .. src)
+    if errorlevel ~= 0 then return errorlevel end
+    local fmtname = string.gsub(engine,"tex$","") .. "latex.fmt"
+    ren(unpackdir,"latex.fmt",fmtname)
+    cp(fmtname,unpackdir,localdir)
+    return 0
+  end
+  local checkengines = options["engine"] or checkengines
+  local errorlevel
+  for _,engine in pairs(checkengines) do
+    errorlevel = mkfmt(engine)
+    if errorlevel ~= 0 then return errorlevel end
+  end
+  return 0
+end
+
+function checkinit_hook() return fmt() end
